@@ -1,0 +1,447 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="index, follow">
+    <title>تقرير فني: تحليل وتحسين SEO لموقع Abar.app</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script>document.addEventListener('DOMContentLoaded', () => { hljs.highlightAll(); });</script>
+    <style>
+        body {
+            font-family: 'Noto Sans Arabic', sans-serif;
+            background-color: #f9fafb;
+            color: #1f2937;
+            line-height: 1.6;
+        }
+        pre code {
+            background: none;
+            font-size: 0.9rem;
+            display: block;
+            white-space: pre;
+        }
+        @media (max-width: 640px) {
+            pre code {
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <nav class="bg-gray-100 p-3 rounded-lg mb-8" aria-label="breadcrumb">
+            <ol class="flex space-x-2 space-x-reverse text-sm text-gray-600">
+                <li><a href="https://abar.app" class="text-blue-600 hover:underline">الرئيسية</a></li>
+                <li class="mx-1">></li>
+                <li><a href="https://abar.app/reports" class="text-blue-600 hover:underline">التقارير</a></li>
+                <li class="mx-1">></li>
+                <li>تقرير تحسين SEO</li>
+            </ol>
+        </nav>
+
+        <h1 class="text-3xl sm:text-4xl font-bold text-center mb-10 text-gray-900">تقرير فني: تحليل وتحسين SEO لموقع Abar.app</h1>
+
+        <div class="bg-white p-6 rounded-lg shadow-md mb-8">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4 border-b-2 border-gray-200 pb-2">جدول المحتويات</h2>
+            <ul class="list-disc mr-6 space-y-2 text-blue-600">
+                <li><a href="#schema" class="hover:underline">غياب سكيما (Schema) للمقالات</a></li>
+                <li><a href="#canonical" class="hover:underline">وجود صفحات مكررة بدون Canonical صحيح</a></li>
+                <li><a href="#prev-next" class="hover:underline">عدم وجود روابط "السابق" و"التالي"</a></li>
+                <li><a href="#internal-linking" class="hover:underline">ضعف الربط الداخلي</a></li>
+                <li><a href="#categories" class="hover:underline">عدم تصنيف المقالات ضمن فئات</a></li>
+                <li><a href="#toc" class="hover:underline">عدم وجود جدول محتوى</a></li>
+                <li><a href="#breadcrumb" class="hover:underline">عدم تفعيل Breadcrumb</a></li>
+                <li><a href="#robots" class="hover:underline">وسم robots محدود</a></li>
+            </ul>
+        </div>
+
+        <section id="schema" class="mb-12">
+            <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-6 border-b-2 border-gray-200 pb-2">1. غياب سكيما (Schema) للمقالات</h2>
+            <div class="overflow-x-auto">
+                <table class="w-full bg-white shadow-md rounded-lg border border-gray-200">
+                    <thead>
+                        <tr class="bg-blue-600 text-white">
+                            <th class="p-4 text-right font-semibold">العنصر</th>
+                            <th class="p-4 text-right font-semibold">التفاصيل</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="hover:bg-gray-50">
+                            <td class="border p-4 font-medium">الوضع الحالي</td>
+                            <td class="border p-4">لا يحتوي الموقع على ترميز Schema، مما يفقده فرصة ظهور المقتطفات المميزة.</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="border p-4 font-medium">التوصيات</td>
+                            <td class="border p-4 bg-green-50">
+                                - استخدام ترميز Article أو BlogPosting.<br>
+                                - تضمين: العنوان، الكاتب، تاريخ النشر، الصورة، الوصف.<br>
+                                - التحقق باستخدام Google's Rich Results Test.
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="border p-4 font-medium">مثال عملي</td>
+                            <td class="border p-4">
+                                <pre class="bg-gray-900 text-white p-4 rounded-lg"><code class="language-json">&lt;script type=&quot;application/ld+json&quot;&gt;
+{
+  &quot;@context&quot;: &quot;https://schema.org&quot;,
+  &quot;@type&quot;: &quot;Article&quot;,
+  &quot;headline&quot;: &quot;عنوان المقال&quot;,
+  &quot;author&quot;: {
+    &quot;@type&quot;: &quot;Person&quot;,
+    &quot;name&quot;: &quot;اسم الكاتب&quot;
+  },
+  &quot;datePublished&quot;: &quot;2025-05-07&quot;,
+  &quot;image&quot;: &quot;https://abar.app/images/article-image.jpg&quot;,
+  &quot;publisher&quot;: {
+    &quot;@type&quot;: &quot;Organization&quot;,
+    &quot;name&quot;: &quot;Abar&quot;,
+    &quot;logo&quot;: {
+      &quot;@type&quot;: &quot;ImageObject&quot;,
+      &quot;url&quot;: &quot;https://abar.app/images/logo.png&quot;
+    }
+  },
+  &quot;description&quot;: &quot;وصف مختصر للمقال.&quot;
+}
+&lt;/script&gt;</code></pre>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="canonical" class="mb-12">
+            <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-6 border-b-2 border-gray-200 pb-2">2. وجود صفحات مكررة بدون Canonical صحيح</h2>
+            <div class="overflow-x-auto">
+                <table class="w-full bg-white shadow-md rounded-lg border border-gray-200">
+                    <thead>
+                        <tr class="bg-blue-600 text-white">
+                            <th class="p-4 text-right font-semibold">العنصر</th>
+                            <th class="p-4 text-right font-semibold">التفاصيل</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="hover:bg-gray-50">
+                            <td class="border p-4 font-medium">الوضع الحالي</td>
+                            <td class="border p-4">صفحات مكررة بدون وسم rel="canonical".</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="border p-4 font-medium">التوصيات</td>
+                            <td class="border p-4 bg-green-50">
+                                - تحديد الصفحة الأصلية باستخدام rel="canonical".<br>
+                                - التأكد من أن الصفحة تشير إلى نفسها إذا كانت الأصلية.<br>
+                                - استخدام Ahrefs Site Audit للكشف عن الصفحات المكررة.
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="border p-4 font-medium">مثال عملي</td>
+                            <td class="border p-4">
+                                <pre class="bg-gray-900 text-white p-4 rounded-lg"><code class="language-html">&lt;link rel=&quot;canonical&quot; href=&quot;https://abar.app/blog/article-title&quot; /&gt;</code></pre>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="prev-next" class="mb-12">
+            <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-6 border-b-2 border-gray-200 pb-2">3. عدم وجود روابط "السابق" و"التالي" في المقالات</h2>
+            <div class="overflow-x-auto">
+                <table class="w-full bg-white shadow-md rounded-lg border border-gray-200">
+                    <thead>
+                        <tr class="bg-blue-600 text-white">
+                            <th class="p-4 text-right font-semibold">العنصر</th>
+                            <th class="p-4 text-right font-semibold">التفاصيل</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="hover:bg-gray-50">
+                            <td class="border p-4 font-medium">الوضع الحالي</td>
+                            <td class="border p-4">لا توجد روابط تنقل بين المقالات السابقة والتالية.</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="border p-4 font-medium">التوصيات</td>
+                            <td class="border p-4 bg-green-50">
+                                - إضافة روابط تنقل في نهاية المقالات.<br>
+                                - استخدام rel="prev" وrel="next" في <head>.
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="border p-4 font-medium">مثال عملي</td>
+                            <td class="border p-4">
+                                <pre class="bg-gray-900 text-white p-4 rounded-lg"><code class="language-html">&lt;link rel=&quot;prev&quot; href=&quot;https://abar.app/blog/previous-article&quot; /&gt;
+&lt;link rel=&quot;next&quot; href=&quot;https://abar.app/blog/next-article&quot; /&gt;</code></pre>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="internal-linking" class="mb-12">
+            <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-6 border-b-2 border-gray-200 pb-2">4. ضعف الربط الداخلي بين المقالات</h2>
+            <div class="overflow-x-auto">
+                <table class="w-full bg-white shadow-md rounded-lg border border-gray-200">
+                    <thead>
+                        <tr class="bg-blue-600 text-white">
+                            <th class="p-4 text-right font-semibold">العنصر</th>
+                            <th class="p-4 text-right font-semibold">التفاصيل</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="hover:bg-gray-50">
+                            <td class="border p-4 font-medium">الوضع الحالي</td>
+                            <td class="border p-4">افتقار المقالات لروابط داخلية إلى صفحات ذات صلة.</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="border p-4 font-medium">التوصيات</td>
+                            <td class="border p-4 bg-green-50">
+                                - إضافة روابط داخلية إلى مقالات ذات صلة.<br>
+                                - استخدام نصوص ربط وصفية.<br>
+                                - تجنب الإفراط في استخدام nofollow داخليًا.
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="border p-4 font-medium">مثال عملي</td>
+                            <td class="border p-4">
+                                <pre class="bg-gray-900 text-white p-4 rounded-lg"><code class="language-html">&lt;p&gt;لمعرفة المزيد عن خدمات التوصيل، يمكنك قراءة &lt;a href=&quot;https://abar.app/blog/delivery-services&quot;&gt;هذا المقال&lt;/a&gt;.&lt;/p&gt;</code></pre>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="categories" class="mb-12">
+            <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-6 border-b-2 border-gray-200 pb-2">5. عدم تصنيف المقالات ضمن فئات</h2>
+            <div class="overflow-x-auto">
+                <table class="w-full bg-white shadow-md rounded-lg border border-gray-200">
+                    <thead>
+                        <tr class="bg-blue-600 text-white">
+                            <th class="p-4 text-right font-semibold">العنصر</th>
+                            <th class="p-4 text-right font-semibold">التفاصيل</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="hover:bg-gray-50">
+                            <td class="border p-4 font-medium">الوضع الحالي</td>
+                            <td class="border p-4">المقالات غير مصنفة ضمن فئات.</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="border p-4 font-medium">التوصيات</td>
+                            <td class="border p-4 bg-green-50">
+                                - إنشاء فئات مثل "نصائح التوصيل"، "مراجعات المنتجات".<br>
+                                - تخصيص كل مقال لفئة.<br>
+                                - إضافة روابط الفئات في القائمة والتذييل.
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="border p-4 font-medium">مثال عملي</td>
+                            <td class="border p-4">
+                                <pre class="bg-gray-900 text-white p-4 rounded-lg"><code class="language-html">&lt;a href=&quot;https://abar.app/blog/category/delivery-tips&quot;&gt;نصائح التوصيل&lt;/a&gt;</code></pre>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="toc" class="mb-12">
+            <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-6 border-b-2 border-gray-200 pb-2">6. عدم وجود جدول محتوى</h2>
+            <div class="overflow-x-auto">
+                <table class="w-full bg-white shadow-md rounded-lg border border-gray-200">
+                    <thead>
+                        <tr class="bg-blue-600 text-white">
+                            <th class="p-4 text-right font-semibold">العنصر</th>
+                            <th class="p-4 text-right font-semibold">التفاصيل</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="hover:bg-gray-50">
+                            <td class="border p-4 font-medium">الوضع الحالي</td>
+                            <td class="border p-4">المقالات الطويلة تفتقر إلى جدول محتوى.</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="border p-4 font-medium">التوصيات</td>
+                            <td class="border p-4 bg-green-50">
+                                - إضافة جدول محتوى في بداية المقالات.<br>
+                                - استخدام JavaScript لتوليد الجدول ديناميكيًا.
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="border p-4 font-medium">مثال عملي</td>
+                            <td class="border p-4">
+                                <pre class="bg-gray-900 text-white p-4 rounded-lg"><code class="language-html">&lt;div class=&quot;table-of-contents&quot;&gt;
+  &lt;ul&gt;
+    &lt;li&gt;&lt;a href=&quot;#section1&quot;&gt;مقدمة&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&quot;#section2&quot;&gt;الخدمات المقدمة&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&quot;#section3&quot;&gt;كيفية الطلب&lt;/a&gt;&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/div&gt;</code></pre>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="breadcrumb" class="mb-12">
+            <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-6 border-b-2 border-gray-200 pb-2">7. عدم تفعيل Breadcrumb</h2>
+            <div class="overflow-x-auto">
+                <table class="w-full bg-white shadow-md rounded-lg border border-gray-200">
+                    <thead>
+                        <tr class="bg-blue-600 text-white">
+                            <th class="p-4 text-right font-semibold">العنصر</th>
+                            <th class="p-4 text-right font-semibold">التفاصيل</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="hover:bg-gray-50">
+                            <td class="border p-4 font-medium">الوضع الحالي</td>
+                            <td class="border p-4">الموقع لا يعرض مسارات التنقل (Breadcrumbs).</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="border p-4 font-medium">التوصيات</td>
+                            <td class="border p-4 bg-green-50">
+                                - إضافة مسارات تنقل في أعلى الصفحات.<br>
+                                - استخدام ترميز Schema لـ BreadcrumbList.
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="border p-4 font-medium">مثال عملي</td>
+                            <td class="border p-4">
+                                <pre class="bg-gray-900 text-white p-4 rounded-lg"><code class="language-html">&lt;nav aria-label=&quot;breadcrumb&quot;&gt;
+  &lt;ol&gt;
+    &lt;li&gt;&lt;a href=&quot;https://abar.app&quot;&gt;الرئيسية&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&quot;https://abar.app/blog&quot;&gt;المدونة&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;عنوان المقال&lt;/li&gt;
+  &lt;/ol&gt;
+&lt;/nav&gt;
+
+&lt;script type=&quot;application/ld+json&quot;&gt;
+{
+  &quot;@context&quot;: &quot;https://schema.org&quot;,
+  &quot;@type&quot;: &quot;BreadcrumbList&quot;,
+  &quot;itemListElement&quot;: [
+    {
+      &quot;@type&quot;: &quot;ListItem&quot;,
+      &quot;position&quot;: 1,
+      &quot;name&quot;: &quot;الرئيسية&quot;,
+      &quot;item&quot;: &quot;https://abar.app/&quot;
+    },
+    {
+      &quot;@type&quot;: &quot;ListItem&quot;,
+      &quot;position&quot;: 2,
+      &quot;name&quot;: &quot;المدونة&quot;,
+      &quot;item&quot;: &quot;https://abar.app/blog&quot;
+    },
+    {
+      &quot;@type&quot;: &quot;ListItem&quot;,
+      &quot;position&quot;: 3,
+      &quot;name&quot;: &quot;كيف تختار شركة توصيل مناسبة&quot;,
+      &quot;item&quot;: &quot;https://abar.app/blog/best-delivery-company&quot;
+    }
+  ]
+}
+&lt;/script&gt;</code></pre>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="robots" class="mb-12">
+            <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-6 border-b-2 border-gray-200 pb-2">8. وسم robots محدود</h2>
+            <div class="overflow-x-auto">
+                <table class="w-full bg-white shadow-md rounded-lg border border-gray-200">
+                    <thead>
+                        <tr class="bg-blue-600 text-white">
+                            <th class="p-4 text-right font-semibold">العنصر</th>
+                            <th class="p-4 text-right font-semibold">التفاصيل</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="hover:bg-gray-50">
+                            <td class="border p-4 font-medium">الوضع الحالي</td>
+                            <td class="border p-4">وسم robots محدد كـ "index, nofollow" مما يحد من انتشار قوة الروابط.</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="border p-4 font-medium">التوصيات</td>
+                            <td class="border p-4 bg-green-50">
+                                - تغيير الوسم إلى "index, follow".<br>
+                                - مراجعة الوسم في صفحات المحتوى.<br>
+                                - مراقبة التحسينات عبر Google Search Console.
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="border p-4 font-medium">مثال عملي</td>
+                            <td class="border p-4">
+                                <pre class="bg-gray-900 text-white p-4 rounded-lg"><code class="language-html">&lt;meta name=&quot;robots&quot; content=&quot;index, follow&quot;&gt;</code></pre>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="mb-12">
+            <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-6 border-b-2 border-gray-200 pb-2">ملاحظات هامة</h2>
+            <ul class="list-disc mr-6 space-y-2 text-gray-700">
+                <li>رتب العناصر حسب position بشكل تسلسلي.</li>
+                <li>تأكد أن "item" هي URLs مباشرة وقابلة للوصول.</li>
+                <li>"name" هو الاسم الظاهر للمستخدم.</li>
+            </ul>
+        </section>
+
+        <section class="mb-12">
+            <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-6 border-b-2 border-gray-200 pb-2">أدوات لفحص صحة الترميز</h2>
+            <ul class="list-disc mr-6 space-y-2 text-blue-600">
+                <li><a href="https://search.google.com/test/rich-results" class="hover:underline">Rich Results Test – جوجل</a></li>
+                <li><a href="https://validator.schema.org/" class="hover:underline">Schema Markup Validator</a></li>
+            </ul>
+        </section>
+    </div>
+</body>
+</html>
