@@ -1,0 +1,483 @@
+<html lang="ar" dir="rtl"><head><script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script>
+
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="index, follow">
+    <title>تقرير فني: تحليل وتحسين SEO لموقع Abar.app</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/monokai-sublime.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+    <style>
+        body {
+            font-family: 'Noto Sans Arabic', sans-serif;
+            background-color: #f9fafb;
+            line-height: 1.8;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        .table-auto {
+            border-collapse: collapse;
+            width: 100%;
+            margin-bottom: 2rem;
+        }
+        .table-auto th, .table-auto td {
+            border: 1px solid #e5e7eb;
+            padding: 1rem;
+            text-align: right;
+        }
+        .table-auto th {
+            background-color: #1f2937;
+            color: white;
+            font-weight: bold;
+        }
+        .table-auto tr:nth-child(even) {
+            background-color: #f3f4f6;
+        }
+        .code-block {
+            background-color: #2d3748;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            direction: ltr;
+            text-align: left;
+            overflow-x: auto;
+        }
+        pre code {
+            background: none;
+            padding: 0;
+            font-size: 0.9rem;
+        }
+        .section-title {
+            color: #1f2937;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid #1f2937;
+            padding-bottom: 0.5rem;
+        }
+        .recommendation {
+            background-color: #e6fffa;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        .breadcrumb {
+            background-color: #f3f4f6;
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            margin-bottom: 2rem;
+        }
+        .toc {
+            background-color: #fff;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+        .toc ul {
+            list-style-type: disc;
+            margin-right: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        
+
+        <h1 class="text-3xl font-bold text-center mb-8">تقرير فني: تحليل وتحسين SEO لموقع Abar.app</h1>
+
+        <div class="toc">
+            <h2 class="section-title">جدول المحتويات</h2>
+            <ul>
+                <li><a href="#schema" class="text-blue-600 hover:underline">غياب سكيما (Schema) للمقالات</a></li>
+                <li><a href="#canonical" class="text-blue-600 hover:underline">وجود صفحات مكررة بدون Canonical صحيح</a></li>
+                <li><a href="#prev-next" class="text-blue-600 hover:underline">عدم وجود روابط "السابق" و"التالي"</a></li>
+                <li><a href="#internal-linking" class="text-blue-600 hover:underline">ضعف الربط الداخلي</a></li>
+                <li><a href="#categories" class="text-blue-600 hover:underline">عدم تصنيف المقالات ضمن فئات</a></li>
+                <li><a href="#toc" class="text-blue-600 hover:underline">عدم وجود جدول محتوى</a></li>
+                <li><a href="#breadcrumb" class="text-blue-600 hover:underline">عدم تفعيل Breadcrumb</a></li>
+                <li><a href="#robots" class="text-blue-600 hover:underline">وسم robots محدود</a></li>
+            </ul>
+        </div>
+
+        <section id="schema" class="mb-8">
+            <h2 class="section-title">1. غياب سكيما (Schema) للمقالات</h2>
+            <table class="table-auto">
+                <thead>
+                    <tr>
+                        <th>العنصر</th>
+                        <th>التفاصيل</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>الوضع الحالي</td>
+                        <td>لا يحتوي الموقع على ترميز Schema، مما يفقده فرصة ظهور المقتطفات المميزة.</td>
+                    </tr>
+                    <tr>
+                        <td>التوصيات</td>
+                        <td class="recommendation">
+                            - استخدام ترميز Article أو BlogPosting.<br>
+                            - تضمين: العنوان، الكاتب، تاريخ النشر، الصورة، الوصف.<br>
+                            - التحقق باستخدام Google's Rich Results Test.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>مثال عملي</td>
+                        <td><pre class="code-block"><code class="language-json hljs" data-highlighted="yes">
+&lt;script type=<span class="hljs-string">"application/ld+json"</span>&gt;
+<span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">"@context"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"https://schema.org"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"@type"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"Article"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"headline"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"عنوان المقال"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"author"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+    <span class="hljs-attr">"@type"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"Person"</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">"name"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"اسم الكاتب"</span>
+  <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"datePublished"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"2025-05-07"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"image"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"https://abar.app/images/article-image.jpg"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"publisher"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+    <span class="hljs-attr">"@type"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"Organization"</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">"name"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"Abar"</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">"logo"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+      <span class="hljs-attr">"@type"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"ImageObject"</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"url"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"https://abar.app/images/logo.png"</span>
+    <span class="hljs-punctuation">}</span>
+  <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"description"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"وصف مختصر للمقال."</span>
+<span class="hljs-punctuation">}</span>
+&lt;/script&gt;
+                        </code></pre></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="canonical" class="mb-8">
+            <h2 class="section-title">2. وجود صفحات مكررة بدون Canonical صحيح</h2>
+            <table class="table-auto">
+                <thead>
+                    <tr>
+                        <th>العنصر</th>
+                        <th>التفاصيل</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>الوضع الحالي</td>
+                        <td>صفحات مكررة بدون وسم rel="canonical".</td>
+                    </tr>
+                    <tr>
+                        <td>التوصيات</td>
+                        <td class="recommendation">
+                            - تحديد الصفحة الأصلية باستخدام rel="canonical".<br>
+                            - التأكد من أن الصفحة تشير إلى نفسها إذا كانت الأصلية.<br>
+                            - استخدام Ahrefs Site Audit للكشف عن الصفحات المكررة.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>مثال عملي</td>
+                        <td><pre class="code-block"><code class="language-html hljs language-xml" data-highlighted="yes">
+<span class="hljs-tag">&lt;<span class="hljs-name">link</span> <span class="hljs-attr">rel</span>=<span class="hljs-string">"canonical"</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"https://abar.app/blog/article-title"</span> /&gt;</span>
+                        </code></pre></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="prev-next" class="mb-8">
+            <h2 class="section-title">3. عدم وجود روابط "السابق" و"التالي" في المقالات</h2>
+            <table class="table-auto">
+                <thead>
+                    <tr>
+                        <th>العنصر</th>
+                        <th>التفاصيل</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>الوضع الحالي</td>
+                        <td>لا توجد روابط تنقل بين المقالات السابقة والتالية.</td>
+                    </tr>
+                    <tr>
+                        <td>التوصيات</td>
+                        <td class="recommendation">
+                            - إضافة روابط تنقل في نهاية المقالات.<br>
+                            - استخدام rel="prev" وrel="next" في &lt;head&gt;.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>مثال عملي</td>
+                        <td><pre class="code-block"><code class="language-html hljs language-xml" data-highlighted="yes">
+<span class="hljs-tag">&lt;<span class="hljs-name">link</span> <span class="hljs-attr">rel</span>=<span class="hljs-string">"prev"</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"https://abar.app/blog/
+previous-article"</span> /&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">link</span> <span class="hljs-attr">rel</span>=<span class="hljs-string">"next"</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"https://abar.app/
+blog/next-article"</span> /&gt;</span>
+                        </code></pre></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="internal-linking" class="mb-8">
+            <h2 class="section-title">4. ضعف الربط الداخلي بين المقالات</h2>
+            <table class="table-auto">
+                <thead>
+                    <tr>
+                        <th>العنصر</th>
+                        <th>التفاصيل</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>الوضع الحالي</td>
+                        <td>افتقار المقالات لروابط داخلية إلى صفحات ذات صلة.</td>
+                    </tr>
+                    <tr>
+                        <td>التوصيات</td>
+                        <td class="recommendation">
+                            - إضافة روابط داخلية إلى مقالات ذات صلة.<br>
+                            - استخدام نصوص ربط وصفية.<br>
+                            - تجنب الإفراط في استخدام nofollow داخليًا.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>مثال عملي</td>
+                        <td><pre class="code-block"><code class="language-html hljs language-xml" data-highlighted="yes">
+<span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>لمعرفة المزيد عن 
+خدمات التوصيل، يمكنك قراءة <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"https://abar.app/blog/
+delivery-services"</span>&gt;</span>هذا المقال<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>.<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+                        </code></pre></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="categories" class="mb-8">
+            <h2 class="section-title">5. عدم تصنيف المقالات ضمن فئات</h2>
+            <table class="table-auto">
+                <thead>
+                    <tr>
+                        <th>العنصر</th>
+                        <th>التفاصيل</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>الوضع الحالي</td>
+                        <td>المقالات غير مصنفة ضمن فئات.</td>
+                    </tr>
+                    <tr>
+                        <td>التوصيات</td>
+                        <td class="recommendation">
+                            - إنشاء فئات مثل "نصائح التوصيل"، "مراجعات المنتجات".<br>
+                            - تخصيص كل مقال لفئة.<br>
+                            - إضافة روابط الفئات في القائمة والتذييل.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>مثال عملي</td>
+                        <td><pre class="code-block"><code class="language-html hljs language-xml" data-highlighted="yes">
+<span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"https://abar.app/blog/category/
+delivery-tips"</span>&gt;</span>نصائح التوصيل<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+                        </code></pre></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="toc" class="mb-8">
+            <h2 class="section-title">6. عدم وجود جدول محتوى</h2>
+            <table class="table-auto">
+                <thead>
+                    <tr>
+                        <th>العنصر</th>
+                        <th>التفاصيل</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>الوضع الحالي</td>
+                        <td>المقالات الطويلة تفتقر إلى جدول محتوى.</td>
+                    </tr>
+                    <tr>
+                        <td>التوصيات</td>
+                        <td class="recommendation">
+                            - إضافة جدول محتوى في بداية المقالات.<br>
+                            - استخدام JavaScript لتوليد الجدول ديناميكيًا.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>مثال عملي</td>
+                        <td><pre class="code-block"><code class="language-html hljs language-xml" data-highlighted="yes">
+<span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"table-of-contents"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">ul</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"#section1"</span>&gt;</span>مقدمة<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"#section2"</span>&gt;</span>الخدمات المقدمة<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"#section3"</span>&gt;</span>كيفية الطلب<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">ul</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+                        </code></pre></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="breadcrumb" class="mb-8">
+            <h2 class="section-title">7. عدم تفعيل Breadcrumb</h2>
+            <table class="table-auto">
+                <thead>
+                    <tr>
+                        <th>العنصر</th>
+                        <th>التفاصيل</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>الوضع الحالي</td>
+                        <td>الموقع لا يعرض مسارات التنقل (Breadcrumbs).</td>
+                    </tr>
+                    <tr>
+                        <td>التوصيات</td>
+                        <td class="recommendation">
+                            - إضافة مسارات تنقل في أعلى الصفحات.<br>
+                            - استخدام ترميز Schema لـ BreadcrumbList.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>مثال عملي</td>
+                        <td><pre class="code-block"><code class="language-html hljs language-xml" data-highlighted="yes">
+<span class="hljs-tag">&lt;<span class="hljs-name">nav</span> <span class="hljs-attr">aria-label</span>=<span class="hljs-string">"breadcrumb"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">ol</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"https://abar.app"</span>&gt;</span>الرئيسية<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"https://abar.app/blog"</span>&gt;</span>المدونة<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span>عنوان المقال<span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">ol</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">nav</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"application/ld+json"</span>&gt;</span><span class="language-javascript">
+{
+  <span class="hljs-string">"@context"</span>: <span class="hljs-string">"https://schema.org"</span>,
+  <span class="hljs-string">"@type"</span>: <span class="hljs-string">"BreadcrumbList"</span>,
+  <span class="hljs-string">"itemListElement"</span>: [
+    {
+      <span class="hljs-string">"@type"</span>: <span class="hljs-string">"ListItem"</span>,
+      <span class="hljs-string">"position"</span>: <span class="hljs-number">1</span>,
+      <span class="hljs-string">"name"</span>: <span class="hljs-string">"الرئيسية"</span>,
+      <span class="hljs-string">"item"</span>: <span class="hljs-string">"https://abar.app/"</span>
+    },
+    {
+      <span class="hljs-string">"@type"</span>: <span class="hljs-string">"ListItem"</span>,
+      <span class="hljs-string">"position"</span>: <span class="hljs-number">2</span>,
+      <span class="hljs-string">"name"</span>: <span class="hljs-string">"المدونة"</span>,
+      <span class="hljs-string">"item"</span>: <span class="hljs-string">"https://abar.app/blog"</span>
+    },
+    {
+      <span class="hljs-string">"@type"</span>: <span class="hljs-string">"ListItem"</span>,
+      <span class="hljs-string">"position"</span>: <span class="hljs-number">3</span>,
+      <span class="hljs-string">"name"</span>: <span class="hljs-string">"كيف تختار شركة توصيل مناسبة"</span>,
+      <span class="hljs-string">"item"</span>: <span class="hljs-string">"https://abar.app/blog/best-delivery-company"</span>
+    }
+  ]
+}
+</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+                        </code></pre></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="robots" class="mb-8">
+            <h2 class="section-title">8. وسم robots محدود</h2>
+            <table class="table-auto">
+                <thead>
+                    <tr>
+                        <th>العنصر</th>
+                        <th>التفاصيل</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>الوضع الحالي</td>
+                        <td>وسم robots محدد كـ "index, nofollow" مما يحد من انتشار قوة الروابط.</td>
+                    </tr>
+                    <tr>
+                        <td>التوصيات</td>
+                        <td class="recommendation">
+                            - تغيير الوسم إلى "index, follow".<br>
+                            - مراجعة الوسم في صفحات المحتوى.<br>
+                            - مراقبة التحسينات عبر Google Search Console.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>مثال عملي</td>
+                        <td><pre class="code-block"><code class="language-html hljs language-xml" data-highlighted="yes">
+<span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"robots"</span> <span class="hljs-attr">content</span>=<span class="hljs-string">"index, follow"</span>&gt;</span>
+                        </code></pre></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="mb-8">
+            <h2 class="section-title">ملاحظات هامة</h2>
+            <ul class="list-disc mr-6">
+                <li>رتب العناصر حسب position بشكل تسلسلي.</li>
+                <li>تأكد أن "item" هي URLs مباشرة وقابلة للوصول.</li>
+                <li>"name" هو الاسم الظاهر للمستخدم.</li>
+            </ul>
+        </section>
+
+        <section class="mb-8">
+            <h2 class="section-title">أدوات لفحص صحة الترميز</h2>
+            <ul class="list-disc mr-6">
+                <li><a href="https://search.google.com/test/rich-results" class="text-blue-600 hover:underline">Rich Results Test – جوجل</a></li>
+                <li><a href="https://validator.schema.org/" class="text-blue-600 hover:underline">Schema Markup Validator</a></li>
+            </ul>
+        </section>
+    </div>
+
+</body></html>
