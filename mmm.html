@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="مقارنة احترافية بين ماركات المياه المعبأة في السعودية مع محرك بحث متقدم وتصميم متجاوب">
+    <title>مقارنة مياه الشرب المعبأة في السعودية</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.6.2/fuse.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .dark {
+            background-color: #121212;
+            color: #e0e0e0;
+        }
+        .dark .bg-white { background-color: #1e1e1e; }
+        .dark .text-gray-800 { color: #d0d0d0; }
+        .dark .comparison-table th { background-color: #2a2a2a; color: #e0e0e0; }
+        .dark .comparison-table td { border-color: #444; }
+        .dark .comparison-table tr:hover { background-color: #2a2a2a; }
+        .dark .comparison-table td:first-child { background-color: #1e1e1e; }
+        .dark .modal-content { background: #1e1e1e; color: #e0e0e0; }
+        .dark .autocomplete-suggestions { background: #1e1e1e; border-color: #444; color: #e0e0e0; }
+        .dark .suggestion-item:hover { background: #2a2a2a; }
+        .dark .bg-blue-500 { background-color: #1e88e5; }
+        .dark .bg-gray-200 { background-color: #333; color: #e0e0e0; }
+        .table-container {
+            overflow-x: auto;
+            max-height: 600px;
+        }
+		
+		#themeToggle {display:none;}
+        .comparison-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+        .comparison-table th, .comparison-table td {
+            border: 1px solid #e5e7eb;
+            padding: 10px;
+            text-align: right;
+            vertical-align: middle;
+            min-width: 100px;
+            font-size: 0.85rem;
+        }
+        .comparison-table th {
+            background-color: #f3f4f6;
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            font-weight: bold;
+            box-shadow: 0 2px 2px -1px rgba(0,0,0,0.1);
+        }
+        .comparison-table td:first-child {
+            position: sticky;
+            left: 0;
+            background-color: #fff;
+            z-index: 10;
+            font-weight: 600;
+        }
+        .cell-content {
+            max-height: 80px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .cell-content.expandable {
+            cursor: pointer;
+            color: #007bff;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-content {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+        }
+        .close-modal {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+        .autocomplete-suggestions {
+            position: absolute;
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 4px;
+            max-height: 200px;
+            overflow-y: auto;
+            width: 100%;
+            z-index: 50;
+        }
+        .suggestion-item {
+            padding: 8px;
+            cursor: pointer;
+        }
+        .suggestion-item:hover {
+            background: #f3f4f6;
+        }
+        @media (max-width: 768px) {
+            .comparison-table th, .comparison-table td {
+                min-width: 80px;
+                max-width: 120px;
+                font-size: 0.75rem;
+                padding: 6px;
+            }
+            .hide-mobile {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+    <header class="bg-blue-600 text-white py-6 shadow-lg">
+        <div class="container mx-auto px-4 flex justify-between items-center">
+            <div>
+                <h1 class="text-3xl font-bold">دليل مقارنة مياه الشرب المعبأة في السعودية</h1>
+                <p class="mt-2">استكشف وقارن بين ماركات المياه بسهولة ودقة</p>
+            </div>
+            <button id="themeToggle" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300">الوضع الداكن</button>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-8">
+        <!-- Search Section -->
+        <section class="search-container mb-12">
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h2 class="text-2xl font-semibold mb-4">محرك البحث المتقدم</h2>
+                <div class="relative">
+                    <input type="text" id="searchInput" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="ابحث عن علامة تجارية، نسبة الصوديوم، المصدر، إلخ..." aria-label="البحث عن ماركات المياه">
+                    <div id="autocompleteSuggestions" class="autocomplete-suggestions hidden"></div>
+                </div>
+                <div class="mt-4 flex flex-wrap gap-4">
+                    <select id="filterAttribute" class="p-2 border rounded-lg" aria-label="تصفية حسب الخاصية">
+                        <option value="">جميع الخصائص</option>
+                        <option value="brand">العلامة التجارية</option>
+                        <option value="sodiumDisplay">نسبة الصوديوم</option>
+                        <option value="ph">الرقم الهيدروجيني</option>
+                        <option value="tds">إجمالي المواد الصلبة</option>
+                        <option value="source">مصدر المياه</option>
+                    </select>
+                    <input type="range" id="sodiumRange" min="0" max="30" value="30" class="w-48" aria-label="تصفية نسبة الصوديوم">
+                    <span id="sodiumValue" class="text-sm">الصوديوم: حتى 30 ملغ/لتر</span>
+                    <button id="clearSearch" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300" aria-label="مسح البحث">مسح البحث</button>
+                    <button id="exportCsv" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600" aria-label="تصدير كـ CSV">تصدير CSV</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Comparison Table -->
+        <section id="comparisonSection">
+            <h2 class="text-2xl font-semibold mb-6">جدول المقارنة</h2>
+            <div class="table-container">
+                <table class="comparison-table bg-white rounded-lg shadow-lg">
+                    <thead>
+                        <tr>
+                            <th>العلامة التجارية</th>
+                            <th>الموقع الرسمي</th>
+                            <th>نسبة الصوديوم (ملغ/لتر)</th>
+                            <th class="hide-mobile">الرقم الهيدروجيني</th>
+                            <th class="hide-mobile">إجمالي المواد الصلبة (ملغ/لتر)</th>
+                            <th>مصدر المياه</th>
+                            <th>تركيبة المعادن</th>
+                            <th class="hide-mobile">درجة النقاء</th>
+                            <th class="hide-mobile">درجة العذوبة</th>
+                            <th class="hide-mobile">أنواع الزجاجات</th>
+                            <th>الأحجام</th>
+                            <th>الأسعار (ريال)</th>
+                            <th class="hide-mobile">النكهات</th>
+                            <th class="hide-mobile">الفروع/المصنع</th>
+                        </tr>
+                    </thead>
+                    <tbody id="comparisonTableBody"></tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal for Expanded Content -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" aria-label="إغلاق">×</span>
+            <h3 id="modalTitle" class="text-xl font-semibold mb-4"></h3>
+            <div id="modalContent"></div>
+        </div>
+    </div>
+
+    <footer class="bg-gray-800 text-white py-6 mt-12">
+        <div class="container mx-auto px-4 text-center">
+            <p>جميع البيانات مجمعة من المواقع الرسمية ومصادر موثوقة. للتحقق، راجع الملصقات أو تواصل مع الشركات مباشرة.</p>
+            <p class="mt-2">© 2025 دليل مياه الشرب السعودية</p>
+        </div>
+    </footer>
+
+    <script>
+        // Data
+        const waterBrands = [
+            {
+                brand: "نوفا",
+                website: "https://novawater.com/",
+                sodium: 16.8,
+                sodiumDisplay: "16.8 (متوسط)",
+                ph: "7.0",
+                tds: "120",
+                source: "آبار جوفية في سعد، رماح / جبال السروات",
+                minerals: ["كالسيوم: 10.0 ملغ/لتر", "مغنيسيوم: 4.5 ملغ/لتر", "بوتاسيوم: 1.1 ملغ/لتر", "بيكربونات: 20.0 ملغ/لتر", "كبريتات: 35.0 ملغ/لتر", "نترات: 3.1 ملغ/لتر", "كلوريد: 17.0 ملغ/لتر", "فلورايد: 0.8 ملغ/لتر"],
+                purity: "عالية (99.9%)",
+                taste: "نقي ومنعش",
+                bottleTypes: "بلاستيك، زجاج",
+                sizes: ["200 مل", "330 مل", "550 مل", "1.5 لتر", "5 لتر", "10 لتر", "20 لتر"],
+                prices: ["0.65 (330 مل)", "22.10 (40×330 مل)"],
+                flavors: ["لا توجد"],
+                branches: ["مصنع في سعد، رماح", "توزيع على مستوى المملكة"]
+            },
+            {
+                brand: "بيرين",
+                website: "https://berain.com.sa/",
+                sodium: 1.0,
+                sodiumDisplay: "1.0 (محدود البيانات)",
+                ph: "8.0",
+                tds: "N/A",
+                source: "آبار جوفية في الرياض / عيون مياه جوفية",
+                minerals: ["كالسيوم: 6.5 ملغ/لتر", "مغنيسيوم: 1.7 ملغ/لتر", "بيكربونات: 22.0 ملغ/لتر"],
+                purity: "عالية (99.8%)",
+                taste: "ناعم ومنعش",
+                bottleTypes: "بلاستيك، زجاج",
+                sizes: ["200 مل", "330 مل", "600 مل", "1.5 لتر", "5 لتر", "12 لتر"],
+                prices: ["1.0 (330 مل)", "10.0 (5 لتر)"],
+                flavors: ["ليمون", "توت", "نعناع"],
+                branches: ["مصنع في الرياض", "42 مدينة ومحافظة"]
+            },
+            {
+                brand: "تانيا",
+                website: "https://taniawater.sa/",
+                sodium: 12.2,
+                sodiumDisplay: "12.2",
+                ph: "N/A",
+                tds: "N/A",
+                source: "آبار جوفية في وادي الشديدة، الخرج",
+                minerals: ["N/A"],
+                purity: "عالية (معالجة بالأوزون)",
+                taste: "نقي، مناسب للرياضيين",
+                bottleTypes: "بلاستيك",
+                sizes: ["200 مل", "330 مل", "600 مل", "1.5 لتر", "5 لتر", "10 لتر", "20 لتر"],
+                prices: ["7.50 (24×200 مل)", "23.95 (40×330 مل)"],
+                flavors: ["لا توجد"],
+                branches: ["موزعين في الرياض، جدة، الشرقية"]
+            },
+            {
+                brand: "نقي",
+                website: "https://naqiwater.com/",
+                sodium: 0,
+                sodiumDisplay: "N/A",
+                ph: "N/A",
+                tds: "N/A",
+                source: "آبار جوفية في القصيم",
+                minerals: ["N/A"],
+                purity: "عالية (خطوط إنتاج أوروبية)",
+                taste: "نقي",
+                bottleTypes: "بلاستيك",
+                sizes: ["200 مل", "600 مل"],
+                prices: ["13.75 (30×600 مل)", "16.00 (48×200 مل)"],
+                flavors: ["لا توجد"],
+                branches: ["مصنع في القصيم", "توزيع على مستوى المملكة"]
+            },
+            {
+                brand: "أروى",
+                website: "https://www.coca-cola.com/xf/ar/brands/arwa",
+                sodium: 1.4,
+                sodiumDisplay: "1.4 (عادية), <1 (زيرو صوديوم)",
+                ph: "7.0",
+                tds: "N/A",
+                source: "مصنع في العين، الإمارات",
+                minerals: ["صوديوم: 1.4 ملغ/لتر", "بوتاسيوم: 9 ملغ/لتر", "كلوريد: <1 ملغ/لتر", "كالسيوم: <1 ملغ/لتر", "مغنيسيوم: 20.7 ملغ/لتر", "فلورايد: <0.1 ملغ/لتر", "نترات: <1 ملغ/لتر", "بيكربونات: 12 ملغ/لتر", "كبريتات: 77.4 ملغ/لتر"],
+                purity: "عالية (تركيبة معدنية متوازنة)",
+                taste: "ناعم ومنعش",
+                bottleTypes: "بلاستيك",
+                sizes: ["200 مل", "330 مل", "500 مل", "1.5 لتر"],
+                prices: ["19.00 (40×330 مل)", "22.00 (48×200 مل)"],
+                flavors: ["فراولة (غازية)", "ليمون (غازية)"],
+                branches: ["توزيع عبر شركاء كوكا كولا"]
+            },
+            {
+                brand: "حياة",
+                website: "N/A",
+                sodium: 20.0,
+                sodiumDisplay: "20.0",
+                ph: "N/A",
+                tds: "N/A",
+                source: "غير محدد",
+                minerals: ["N/A"],
+                purity: "N/A",
+                taste: "N/A",
+                bottleTypes: "بلاستيك",
+                sizes: ["330 مل", "600 مل"],
+                prices: ["تختلف حسب المتجر"],
+                flavors: ["لا توجد"],
+                branches: ["N/A"]
+            },
+            {
+                brand: "فرح",
+                website: "N/A",
+                sodium: 25.0,
+                sodiumDisplay: "25.0",
+                ph: "N/A",
+                tds: "N/A",
+                source: "غير محدد",
+                minerals: ["N/A"],
+                purity: "N/A",
+                taste: "N/A",
+                bottleTypes: "بلاستيك",
+                sizes: ["متنوعة"],
+                prices: ["تختلف حسب المتجر"],
+                flavors: ["لا توجد"],
+                branches: ["N/A"]
+            },
+            {
+                brand: "هنا",
+                website: "https://hanawater.com/",
+                sodium: 5.0,
+                sodiumDisplay: "<5",
+                ph: "N/A",
+                tds: "N/A",
+                source: "آبار طبيعية - القصيم",
+                minerals: ["كالسيوم: 21 ملغ/لتر", "مغنيسيوم: 9 ملغ/لتر", "فلورايد: 1 ملغ/لتر", "بيكربونات: 18 ملغ/لتر"],
+                purity: "عالية",
+                taste: "نقي",
+                bottleTypes: "بلاستيك",
+                sizes: ["200 مل", "330 مل", "600 مل", "12 لتر"],
+                prices: ["3.95 (5 لتر)"],
+                flavors: ["لا توجد"],
+                branches: ["40 فرعاً في المملكة"]
+            },
+            {
+                brand: "أكوافينا",
+                website: "https://www.aquafina.com/",
+                sodium: 16.0,
+                sodiumDisplay: "16.0",
+                ph: "N/A",
+                tds: "N/A",
+                source: "مياه معالجة ومفلترة",
+                minerals: ["مغنيسيوم: 20 ملغ/لتر", "كبريتات: 86 ملغ/لتر", "فلورايد: 0.5 ملغ/لتر"],
+                purity: "عالية",
+                taste: "نقي",
+                bottleTypes: "بلاستيك",
+                sizes: ["330 مل", "500 مل", "1.5 لتر", "5 لتر"],
+                prices: ["6.95 (6×1.5 لتر)"],
+                flavors: ["لا توجد"],
+                branches: ["توزيع على مستوى المملكة"]
+            },
+            {
+                brand: "نستلة Pure Life",
+                website: "https://www.nestlepurelife.com/",
+                sodium: 9.5,
+                sodiumDisplay: "9.5",
+                ph: "N/A",
+                tds: "N/A",
+                source: "مياه معالجة وفق معايير نستل العالمية",
+                minerals: ["كالسيوم: 27 ملغ/لتر", "مغنيسيوم: 2.3 ملغ/لتر", "فلورايد: 0.8 ملغ/لتر", "بيكربونات: 22 ملغ/لتر"],
+                purity: "عالية",
+                taste: "نقي",
+                bottleTypes: "بلاستيك",
+                sizes: ["330 مل", "1.5 لتر", "5 لتر"],
+                prices: ["17.83 (12×1.5 لتر)"],
+                flavors: ["لا توجد"],
+                branches: ["توزيع على مستوى المملكة"]
+            }
+        ];
+
+        // Initialize Fuse.js for fuzzy search
+        const fuseOptions = {
+            keys: ['brand', 'sodiumDisplay', 'ph', 'tds', 'source', 'minerals', 'purity', 'taste', 'bottleType', 'sizes', 'prices', 'flavors', 'branches'],
+            threshold: 0.3,
+            includeScore: true
+        };
+        const fuse = new Fuse(waterBrands, fuseOptions);
+
+        // DOM Elements
+        const searchInput = document.getElementById('searchInput');
+        const autocompleteSuggestions = document.getElementById('autocompleteSuggestions');
+        const filterAttribute = document.getElementById('filterAttribute');
+        const sodiumRange = document.getElementById('sodiumRange');
+        const sodiumValue = document.getElementById('sodiumValue');
+        const clearSearch = document.getElementById('clearSearch');
+        const exportCsv = document.getElementById('exportCsv');
+        const comparisonTableBody = document.getElementById('comparisonTableBody');
+        const modal = document.getElementById('modal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalContent = document.getElementById('modalContent');
+        const closeModal = document.querySelector('.close-modal');
+        const themeToggle = document.getElementById('themeToggle');
+
+        // Theme Toggle
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark');
+            themeToggle.textContent = document.body.classList.contains('dark') ? 'الوضع الفاتح' : 'الوضع الداكن';
+        });
+
+        // Render Table
+        function renderTable(data) {
+            comparisonTableBody.innerHTML = '';
+            data.forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${item.brand}</td>
+                    <td><a href="${item.website}" target="_blank" class="text-blue-500 hover:underline" aria-label="زيارة موقع ${item.brand}">${item.website || 'N/A'}</a></td>
+                    <td>${item.sodiumDisplay}</td>
+                    <td class="hide-mobile">${item.ph}</td>
+                    <td class="hide-mobile">${item.tds}</td>
+                    <td>${item.source}</td>
+                    <td><div class="cell-content expandable" data-content='${JSON.stringify(item.minerals)}' data-title="تركيبة المعادن لـ ${item.brand}">${item.minerals[0] || 'N/A'}</div></td>
+                    <td class="hide-mobile">${item.purity}</td>
+                    <td class="hide-mobile">${item.taste}</td>
+                    <td class="hide-mobile">${item.bottleTypes}</td>
+                    <td><div class="cell-content expandable" data-content='${JSON.stringify(item.sizes)}' data-title="الأحجام لـ ${item.brand}">${item.sizes[0] || 'N/A'}</div></td>
+                    <td><div class="cell-content expandable" data-content='${JSON.stringify(item.prices)}' data-title="الأسعار لـ ${item.brand}">${item.prices[0] || 'N/A'}</div></td>
+                    <td class="hide-mobile"><div class="cell-content expandable" data-content='${JSON.stringify(item.flavors)}' data-title="النكهات لـ ${item.brand}">${item.flavors[0] || 'N/A'}</div></td>
+                    <td class="hide-mobile"><div class="cell-content expandable" data-content='${JSON.stringify(item.branches)}' data-title="الفروع لـ ${item.brand}">${item.branches[0] || 'N/A'}</div></td>
+                `;
+                comparisonTableBody.appendChild(row);
+            });
+
+            // Add click events for expandable cells
+            document.querySelectorAll('.expandable').forEach(cell => {
+                cell.addEventListener('click', () => {
+                    const content = JSON.parse(cell.dataset.content);
+                    modalTitle.textContent = cell.dataset.title;
+                    modalContent.innerHTML = `<ul class="list-disc pr-5">${content.map(item => `<li>${item}</li>`).join('')}</ul>`;
+                    modal.style.display = 'flex';
+                });
+            });
+        }
+
+        // Initial Render
+        renderTable(waterBrands);
+
+        // Autocomplete Suggestions
+        searchInput.addEventListener('input', () => {
+            const query = searchInput.value.trim();
+            autocompleteSuggestions.innerHTML = '';
+            if (query.length > 1) {
+                const suggestions = fuse.search(query).slice(0, 5).map(result => result.item.brand);
+                suggestions.forEach(suggestion => {
+                    const div = document.createElement('div');
+                    div.className = 'suggestion-item';
+                    div.textContent = suggestion;
+                    div.addEventListener('click', () => {
+                        searchInput.value = suggestion;
+                        autocompleteSuggestions.classList.add('hidden');
+                        triggerSearch();
+                    });
+                    autocompleteSuggestions.appendChild(div);
+                });
+                autocompleteSuggestions.classList.remove('hidden');
+            } else {
+                autocompleteSuggestions.classList.add('hidden');
+            }
+            triggerSearch();
+        });
+
+        // Trigger Search
+        function triggerSearch() {
+            const query = searchInput.value.trim();
+            const filter = filterAttribute.value;
+            const maxSodium = parseFloat(sodiumRange.value);
+
+            let results = waterBrands;
+            if (query) {
+                results = fuse.search(query).map(result => result.item);
+                if (filter) {
+                    results = results.filter(item => item[filter].toString().toLowerCase().includes(query.toLowerCase()));
+                }
+            }
+            results = results.filter(item => item.sodium <= maxSodium || item.sodium === 0 || isNaN(item.sodium));
+            renderTable(results);
+        }
+
+        // Sodium Range Filter
+        sodiumRange.addEventListener('input', () => {
+            sodiumValue.textContent = `الصوديوم: حتى ${sodiumRange.value} ملغ/لتر`;
+            triggerSearch();
+        });
+
+        // Clear Search
+        clearSearch.addEventListener('click', () => {
+            searchInput.value = '';
+            filterAttribute.value = '';
+            sodiumRange.value = 30;
+            sodiumValue.textContent = `الصوديوم: حتى 30 ملغ/لتر`;
+            autocompleteSuggestions.classList.add('hidden');
+            renderTable(waterBrands);
+        });
+
+        // Modal Close
+        closeModal.addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+        modal.addEventListener('click', e => {
+            if (e.target === modal) modal.style.display = 'none';
+        });
+
+        // Export CSV
+        exportCsv.addEventListener('click', () => {
+            const headers = [
+                "العلامة التجارية",
+                "الموقع الرسمي",
+                "نسبة الصوديوم (ملغ/لتر)",
+                "الرقم الهيدروجيني",
+                "إجمالي المواد الصلبة (ملغ/لتر)",
+                "مصدر المياه",
+                "تركيبة المعادن",
+                "درجة النقاء",
+                "درجة العذوبة",
+                "أنواع الزجاجات",
+                "الأحجام",
+                "الأسعار (ريال)",
+                "النكهات",
+                "الفروع/المصنع"
+            ];
+            const csvRows = [
+                headers.map(header => `"${header}"`).join(','),
+                ...waterBrands.map(item => [
+                    `"${item.brand}"`,
+                    `"${item.website || 'N/A'}"`,
+                    `"${item.sodiumDisplay}"`,
+                    `"${item.ph}"`,
+                    `"${item.tds}"`,
+                    `"${item.source}"`,
+                    `"${item.minerals.join('; ')}"`,
+                    `"${item.purity}"`,
+                    `"${item.taste}"`,
+                    `"${item.bottleTypes}"`,
+                    `"${item.sizes.join('; ')}"`,
+                    `"${item.prices.join('; ')}"`,
+                    `"${item.flavors.join('; ')}"`,
+                    `"${item.branches.join('; ')}"`
+                ].join(','))
+            ].join('\n');
+
+            const BOM = '\uFEFF'; // UTF-8 BOM for Arabic support
+            const blob = new Blob([BOM + csvRows], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'water_comparison.csv';
+            link.click();
+        });
+
+        // Keyboard Navigation
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape') modal.style.display = 'none';
+        });
+    </script>
+</body>
+</html>
