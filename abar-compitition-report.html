@@ -1,0 +1,456 @@
+<html lang="ar" dir="rtl"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تقرير تحليل الروابط الخلفية والكلمات المفتاحية</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap');
+        
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .navbar {
+            background-color: #1e3a8a;
+            color: white;
+            padding: 1rem;
+            margin-bottom: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .navbar-nav {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+        }
+        
+        .nav-item {
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        
+        .nav-item:hover {
+            background-color: #2563eb;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1.5rem;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: right;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        th {
+            background-color: #f3f4f6;
+            font-weight: bold;
+        }
+        
+        tr:hover {
+            background-color: #f9fafb;
+        }
+        
+        .best {
+            background-color: rgba(16, 185, 129, 0.1);
+        }
+        
+        .medium {
+            background-color: rgba(245, 158, 11, 0.1);
+        }
+        
+        .worst {
+            background-color: rgba(239, 68, 68, 0.1);
+        }
+        
+        .highlight-best {
+            color: #047857;
+            font-weight: 600;
+        }
+        
+        .highlight-medium {
+            color: #b45309;
+            font-weight: 600;
+        }
+        
+        .highlight-worst {
+            color: #b91c1c;
+            font-weight: 600;
+        }
+        
+        .keyword-gap-table {
+            font-size: 0.9rem;
+        }
+        
+        .keyword-gap-table th {
+            background-color: #1e3a8a;
+            color: white;
+        }
+        
+        .keyword-gap-table tr:nth-child(even) {
+            background-color: #f3f4f6;
+        }
+        
+        .domain-authority-chart {
+            width: 100%;
+            margin: 2rem 0;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .backlink-strategy {
+            background-color: #f0f9ff;
+            border-right: 4px solid #0369a1;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-radius: 8px;
+        }
+        
+        .section-title {
+            color: #1e3a8a;
+            border-bottom: 2px solid #1e3a8a;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding: 1rem;
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav class="navbar">
+            <ul class="navbar-nav">
+                <li class="nav-item"><a href="#overview">نظرة عامة</a></li>
+                <li class="nav-item"><a href="#domain-authority">سلطة النطاق</a></li>
+                <li class="nav-item"><a href="#backlink-types">أنواع الروابط</a></li>
+                <li class="nav-item"><a href="#keyword-gaps">فجوات الكلمات المفتاحية</a></li>
+                <li class="nav-item"><a href="#backlink-strategy">استراتيجية الروابط الخلفية</a></li>
+            </ul>
+        </nav>
+        
+        <h1 class="text-4xl font-bold mb-6 text-center">تقرير تحليل الروابط الخلفية والكلمات المفتاحية</h1>
+        <p class="text-center text-gray-600 mb-8">تم إنشاء التقرير بتاريخ 25 مايو 2025</p>
+
+        <!-- الملخص -->
+        <div class="card" id="overview">
+            <h2 class="section-title text-2xl font-semibold mb-4">ملخص تحليلي</h2>
+            <p class="text-gray-700 mb-4">
+                يُظهر التقرير تفوق <span class="highlight-best">suqiakum.com</span> بشكل واضح بـ<span class="highlight-best">2.8 ألف رابط خلفي</span> و<span class="highlight-best">488 نطاقًا مرجعيًا</span>، مما يعكس استراتيجية قوية في بناء الروابط. يأتي <span class="highlight-medium">abar.app</span> في المرتبة الثانية بـ<span class="highlight-medium">1.1 ألف رابط</span> و<span class="highlight-medium">315 نطاقًا</span>، مما يشير إلى قاعدة جيدة تحتاج إلى تنويع مصادر الروابط. المواقع الأخرى (<span class="highlight-worst">wash.sa</span>، <span class="highlight-worst">today-water.com</span>، <span class="highlight-worst">moytaklbaitk.com</span>) تظهر أداءً أضعف بسبب قلة الروابط وانخفاض درجات السلطة.
+            </p>
+            <h3 class="text-xl font-semibold mb-2">أسباب تفوق المنافسين:</h3>
+            <p class="text-gray-700 mb-4">
+                يتفوق موقع suqiakum.com بشكل واضح على موقع abar.app بسبب تنوع كبير في النطاقات المرجعية (488) مع تركيز على الروابط التالية (98%)، مما يعزز السلطة والثقة في محركات البحث. كما أن موقع today-water.com يتفوق في بعض الكلمات المفتاحية الرئيسية مثل "المياه" و"تعبئة مياه" بسبب استراتيجية محتوى أكثر تركيزًا على هذه الكلمات المفتاحية. بينما يمتلك موقع abar.app عددًا جيدًا من الروابط (1.1 ألف)، إلا أنه يفتقر إلى التنوع في مصادر الروابط عالية السلطة، حيث أن معظم الروابط تأتي من نطاقات ذات سلطة منخفضة (0-20).
+            </p>
+            <p class="text-gray-700 mb-4">
+                من أهم أسباب تفوق المنافسين أيضًا هو الحصول على روابط خلفية من مواقع ذات سلطة عالية (أوثوريتي 80+)، حيث نلاحظ أن موقع today-water.com يمتلك روابط من نطاقين ذوي سلطة عالية (81-100)، بينما يمتلك موقع suqiakum.com روابط من نطاقين أيضًا في نفس الفئة. هذه الروابط عالية السلطة تمنح هذه المواقع ميزة تنافسية كبيرة في محركات البحث.
+            </p>
+        </div>
+
+        <!-- سلطة النطاق -->
+        <div class="card" id="domain-authority">
+            <h2 class="section-title text-2xl font-semibold mb-4">تحليل سلطة النطاق</h2>
+            <p class="text-gray-700 mb-4">
+                تُظهر البيانات أدناه توزيع النطاقات المرجعية حسب درجة السلطة (Authority Score). يمكن ملاحظة أن معظم الروابط الخلفية لجميع المواقع تأتي من نطاقات ذات سلطة منخفضة (0-20)، مما يشير إلى فرصة كبيرة للتحسين من خلال استهداف نطاقات ذات سلطة أعلى.
+            </p>
+            
+            <div class="domain-authority-chart">
+                <img src="domain_authority.png" alt="توزيع النطاقات حسب درجة السلطة" class="w-full">
+            </div>
+            
+            <div class="mt-4">
+                <h3 class="text-xl font-semibold mb-2">تحليل النطاقات حسب درجة السلطة:</h3>
+                <p class="text-gray-700 mb-4">
+                    يوضح الرسم البياني أعلاه توزيع النطاقات المرجعية حسب درجة السلطة لكل موقع. نلاحظ أن موقع abar.app يمتلك نطاقًا واحدًا فقط في الفئة العليا (81-100)، بينما يمتلك موقع today-water.com نطاقين، وموقع suqiakum.com نطاقين أيضًا. هذا يشير إلى أهمية زيادة عدد الروابط من النطاقات ذات السلطة العالية لموقع abar.app لتحسين ترتيبه في محركات البحث.
+                </p>
+                <p class="text-gray-700">
+                    كما نلاحظ أن موقع abar.app يمتلك عددًا كبيرًا من النطاقات في الفئة المنخفضة (0-20) بواقع 303 نطاق، وهو ما يمثل نسبة كبيرة من إجمالي النطاقات المرجعية. هذا يشير إلى ضرورة تنويع مصادر الروابط واستهداف نطاقات ذات سلطة أعلى.
+                </p>
+            </div>
+        </div>
+
+        <!-- جدول المقارنة العامة -->
+        <div class="card" id="backlink-types">
+            <h2 class="section-title text-2xl font-semibold mb-4">نظرة عامة على الروابط الخلفية</h2>
+            <table class="table-auto w-full mb-8">
+                <thead>
+                    <tr>
+                        <th>الموقع</th>
+                        <th>عدد الروابط الخلفية</th>
+                        <th>النطاقات المرجعية</th>
+                        <th>عناوين IP المرجعية</th>
+                        <th>درجة السلطة</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="medium">
+                        <td>abar.app</td>
+                        <td>1.1 ألف</td>
+                        <td>315</td>
+                        <td>335</td>
+                        <td>23</td>
+                    </tr>
+                    <tr class="worst">
+                        <td>wash.sa</td>
+                        <td>76</td>
+                        <td>57</td>
+                        <td>57</td>
+                        <td>13</td>
+                    </tr>
+                    <tr class="worst">
+                        <td>today-water.com</td>
+                        <td>176</td>
+                        <td>66</td>
+                        <td>74</td>
+                        <td>26</td>
+                    </tr>
+                    <tr class="worst">
+                        <td>moytaklbaitk.com</td>
+                        <td>114</td>
+                        <td>58</td>
+                        <td>56</td>
+                        <td>28</td>
+                    </tr>
+                    <tr class="best">
+                        <td>suqiakum.com</td>
+                        <td>2.8 ألف</td>
+                        <td>488</td>
+                        <td>473</td>
+                        <td>28</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- جدول مقارنة أنواع الروابط -->
+            <h3 class="text-xl font-semibold mb-2">مقارنة حسب أنواع الروابط</h3>
+            <table class="table-auto w-full mb-8">
+                <thead>
+                    <tr>
+                        <th>الموقع</th>
+                        <th>نص</th>
+                        <th>صورة</th>
+                        <th>إطار</th>
+                        <th>نسبة الروابط التالية</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="medium">
+                        <td>abar.app</td>
+                        <td>99%</td>
+                        <td>1%</td>
+                        <td>0%</td>
+                        <td>87%</td>
+                    </tr>
+                    <tr class="worst">
+                        <td>wash.sa</td>
+                        <td>100%</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>64%</td>
+                    </tr>
+                    <tr class="worst">
+                        <td>today-water.com</td>
+                        <td>100%</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>89%</td>
+                    </tr>
+                    <tr class="worst">
+                        <td>moytaklbaitk.com</td>
+                        <td>100%</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>49%</td>
+                    </tr>
+                    <tr class="best">
+                        <td>suqiakum.com</td>
+                        <td>97%</td>
+                        <td>3%</td>
+                        <td>0%</td>
+                        <td>98%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- فجوات الكلمات المفتاحية -->
+        <div class="card" id="keyword-gaps">
+            <h2 class="section-title text-2xl font-semibold mb-4">فجوات الكلمات المفتاحية</h2>
+            <p class="text-gray-700 mb-4">
+                يوضح الجدول أدناه أهم الكلمات المفتاحية التي تمثل فجوات كبيرة بين موقع abar.app والمنافسين، مرتبة حسب حجم البحث الشهري. هذه الكلمات تمثل فرصًا مهمة للتحسين والاستهداف في استراتيجية تحسين محركات البحث.
+            </p>
+            
+            <table class="keyword-gap-table table-auto w-full mb-8">
+                <thead>
+                    <tr>
+                        <th>الكلمة المفتاحية</th>
+                        <th>حجم البحث</th>
+                        <th>صعوبة الكلمة</th>
+                        <th>abar.app</th>
+                        <th>today-water.com</th>
+                        <th>suqiakum.com</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>المياه</td>
+                        <td>14,800</td>
+                        <td>متوسطة</td>
+                        <td>0</td>
+                        <td>22</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td>تعبئة مياه</td>
+                        <td>12,100</td>
+                        <td>متوسطة</td>
+                        <td>0</td>
+                        <td>22</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td>مياه غازية</td>
+                        <td>12,100</td>
+                        <td>منخفضة</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td>الماء</td>
+                        <td>22,200</td>
+                        <td>عالية</td>
+                        <td>0</td>
+                        <td>21</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td>مويه</td>
+                        <td>18,100</td>
+                        <td>متوسطة</td>
+                        <td>0</td>
+                        <td>4</td>
+                        <td>8</td>
+                    </tr>
+                    <tr>
+                        <td>بيرين</td>
+                        <td>18,100</td>
+                        <td>متوسطة</td>
+                        <td>0</td>
+                        <td>16</td>
+                        <td>20</td>
+                    </tr>
+                    <tr>
+                        <td>لتر ماء</td>
+                        <td>14,800</td>
+                        <td>منخفضة</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="mt-4">
+                <h3 class="text-xl font-semibold mb-2">تحليل فجوات الكلمات المفتاحية:</h3>
+                <p class="text-gray-700 mb-4">
+                    يظهر التحليل أن موقع today-water.com يتفوق في عدة كلمات مفتاحية رئيسية مثل "المياه" و"الماء" و"تعبئة مياه"، وهي كلمات ذات حجم بحث مرتفع. كما يتفوق موقع suqiakum.com في كلمات مثل "بيرين" و"مويه". هذه الفجوات تمثل فرصًا مهمة لموقع abar.app لتحسين المحتوى واستهداف هذه الكلمات المفتاحية.
+                </p>
+                <p class="text-gray-700">
+                    من الملاحظ أيضًا وجود كلمات مفتاحية ذات حجم بحث مرتفع مثل "مياه غازية" و"لتر ماء" لم يتم استهدافها بشكل كافٍ من قبل أي من المواقع المنافسة، مما يمثل فرصة ذهبية لموقع abar.app للتفوق في هذه الكلمات.
+                </p>
+            </div>
+        </div>
+
+        <!-- استراتيجية الروابط الخلفية -->
+        <div class="card backlink-strategy" id="backlink-strategy">
+            <h2 class="section-title text-2xl font-semibold mb-4">استراتيجية الروابط الخلفية المقترحة</h2>
+            
+            <h3 class="text-xl font-semibold mb-2">أهمية الروابط من مواقع ذات أوثوريتي عالي (70+)</h3>
+            <p class="text-gray-700 mb-4">
+                تعتبر الروابط الخلفية من مواقع ذات سلطة عالية (أوثوريتي 70+) مثل الأهرام وغيرها من المواقع الإخبارية والمؤسسات الحكومية ذات أهمية قصوى لتحسين ترتيب موقع abar.app في محركات البحث. هذه الروابط تنقل قيمة سلطة عالية للموقع وتزيد من ثقة محركات البحث به. يجب التركيز على بناء علاقات مع هذه المواقع من خلال المحتوى القيم والشراكات الاستراتيجية.
+            </p>
+            
+            <h3 class="text-xl font-semibold mb-2">خطة الباكلينك الهرمية</h3>
+            <p class="text-gray-700 mb-4">
+                لتحسين وضع موقع abar.app في محركات البحث، نقترح تطبيق استراتيجية باكلينك هرمية تتكون من ثلاث طبقات:
+            </p>
+            
+            <ol class="list-decimal mr-6 mb-4 text-gray-700">
+                <li class="mb-2">
+                    <strong>الطبقة الأولى (قمة الهرم):</strong> استهداف 5-10 مواقع ذات سلطة عالية جدًا (أوثوريتي 70+) مثل الأهرام، المواقع الإخبارية ذات السلطة العالية، هذه الروابط ستنقل أعلى قيمة سلطة للموقع بالإضافة لزيادة ورفع معامل الخبرة والموثوقية EEAT.
+                </li>
+                <li class="mb-2">
+                    <strong>الطبقة الثانية (وسط الهرم):</strong> استهداف 20-30 موقعًا ذات سلطة متوسطة إلى عالية (أوثوريتي 40-80) مثل المواقع الإخبارية المتوسطة، المدونات المتخصصة، ومواقع الشركات المعروفة.
+                </li>
+                <li class="mb-2">
+                    <strong>الطبقة الثالثة (قاعدة الهرم):</strong> بناء شبكة واسعة من الروابط من مواقع متنوعة (أوثوريتي 20-40) مثل المدونات الشخصية، منتديات النقاش، ومواقع التواصل الاجتماعي، مع خطة تعزيز للروابط وفق استراتيجية السيو الخارجي الموزعة على 4 أشهر تالية إن شاء الله تعالى.
+                </li>
+            </ol>
+            
+            <h3 class="text-xl font-semibold mb-2">توازن الروابط التالية والنوفولو</h3>
+            <p class="text-gray-700 mb-4">
+                من الضروري زيادة نسبة الروابط النوفولو (NoFollow) لجعل ملف الروابط الخلفية يبدو طبيعيًا أمام محركات البحث. حاليًا، نسبة الروابط التالية (Follow) لموقع abar.app تبلغ 87%، وهي نسبة مرتفعة قد تثير شكوك محركات البحث. يجب العمل على تحقيق توازن أفضل بين الروابط التالية والنوفولو بنسبة تقريبية 70% تالية و30% نوفولو.
+            </p>
+            
+            <h3 class="text-xl font-semibold mb-2">استراتيجيات عملية للتنفيذ:</h3>
+            <ol class="list-decimal mr-6 text-gray-700">
+                
+                
+                
+                
+                <li class="mb-2">
+                    <strong>استهداف الكلمات المفتاحية ذات الفجوات:</strong> تطوير محتوى يستهدف الكلمات المفتاحية التي تمثل فجوات كبيرة مثل "المياه" و"تعبئة مياه" و"مياه غازية"، بالإضافة إلى تلك الكلمات المفتاحية الغير مدرجة التي تحقق زيارات عالية للمنافسين مثل كلمة "تابي" وكلمة "لايف" و"لتر ماء" و "مويه" هذه الكلمات المفتاحية تحقق زيارات كبيرة لتلك المواقع بغض النظر عن مدى فعاليتها في تحقيق مبيعات حقيقية لكنها تفسر بعض الفجوات في الزيارات بين الموقع والمنافسين.
+                </li>
+            <li class="mb-2">
+                    <strong>تنفيذ خطة الجيست بوست والباكلينك متعدد الطبقات:</strong> 
+بناء باكلينك متنوع متعدد الطبقات مع خطة تعزيز قوية سوف يساعد كثيرا إن شاء الله تعالى في تصدر نتائج في جميع الكلمات المفتاحية المستهدفة سواء التي يظهر فيها الموقع حاليا في نتائج متأخرة أو تمثل فجوة بين الموقع والمنافسين.
+                </li>
+				<li class="mb-2">
+                    <strong>التواصل مع المؤثرين:</strong> بناء علاقات مع المؤثرين والخبراء في مجال المياه والبيئة للحصول على إشارات وروابط من مواقعهم.
+                </li>
+				
+				<li class="mb-2">
+                    <strong>الشراكات الاستراتيجية:</strong> بناء شراكات مع المؤسسات الحكومية والشركات في قطاع المياه للحصول على روابط من مواقعهم الرسمية.
+                </li>
+								<li class="mb-2">
+                    <strong>تحسين المحتوى والسيو الداخلي لمنتجات المتجر:</strong> 
+				 تحسين السيو الداخلي للمنتجات وزيادة المحتوى سوف يساعد على أرشفة الكثير من الروابط التي تعتبرها جوجل روابط مكررة بسبب قلة المحتوى الفريد فيها، بالتالي سيزيد عدد الصفحات المؤرشفة للموقع وكذلك الكلمات المفتاحية، أيضا مع تنفيذ جميع الملاحظات السابقة سوف تنموا الكثير من الكلمات المفتاحية المغمورة في نتائج متأخرة إن شاء الله تعالى.
+                </li></ol>
+        </div>
+
+        <footer class="footer">
+            <p>تم إعداد التقرير بواسطة فريق تحليل SEO - جميع الحقوق محفوظة © 2025</p>
+        </footer>
+    </div>
+
+
+</body></html>
